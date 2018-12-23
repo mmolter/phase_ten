@@ -11,12 +11,17 @@
 
 '''
 
+import random
+
 class Card:
 	''' A class to represent a game card. '''
 
 	def __init__(self, color, value):
 		self.color = color
 		self.value = value
+
+	def __str__(self):
+		return self.value + self.color
 
 class Deck:
 	''' A class to hold a series of cards. '''
@@ -38,18 +43,33 @@ class Deck:
 
 			for c in ['R', 'R', 'B', 'B', 'G', 'G', 'Y', 'Y']:
 				for v in range(1, 12+1):
-					self.cards.append(Card(color=c, value=v))
+					self.cards.append(Card(color=c, value=str(v)))
 
 			for i in range(8):
-				self.cards.append(Card(color='-', value='W'))
+				self.cards.append(Card(color='', value='W'))
 
 			for i in range(4):
-				self.cards.append(Card(color='-', value='S'))
+				self.cards.append(Card(color='', value='S'))
+
+	def shuffle(self):
+		''' Shuffle the deck of cards. '''
+
+		random.shuffle(self.cards)
+
+	def draw(self, n=1):
+		''' Draw a card off the top of the deck. '''
+
+		return [self.cards.pop() for i in range(n)]
+
+	def add(self, cards):
+		''' Add a cards to deck. '''
+
+		self.cards.extend(cards)
 
 	def __str__(self):
 		''' Display deck of cards. '''
 
-		return ', '.join([card.value + card.color for card in self.cards])
+		return ', '.join([str(c) for c in self.cards])
 
 	def __len__(self):
 		''' Return size of the deck. '''
@@ -57,6 +77,8 @@ class Deck:
 		return len(self.cards)
 
 deck = Deck(new_deck=True)
-print(len(deck))
+deck.shuffle()
 
-print(sys.__version__)
+
+hand = Deck(cards=deck.draw(n=10))
+print(hand)
